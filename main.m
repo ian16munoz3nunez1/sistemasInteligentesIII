@@ -1,5 +1,16 @@
 % Ian Mu;oz Nu;ez - Perceptron
 
+% Implementar la funcion logica: A(B+C)
+% A B C F
+% 0 0 0 0
+% 0 0 1 0
+% 0 1 0 0
+% 0 1 1 0
+% 1 0 0 0
+% 1 0 1 1
+% 1 1 0 1
+% 1 1 1 1
+
 close all
 clear
 clc
@@ -7,11 +18,13 @@ clc
 iter = 100;
 xl = -0.2;
 xu = 1.2;
+n = 100;
 
-x = [0 0 1 1;
-    0 1 0 1];
-b = [1 1 1 1];
-d = [0 0 0 1];
+x = [0 0 0 0 1 1 1 1;
+    0 0 1 1 0 0 1 1;
+    0 1 0 1 0 1 0 1];
+b = [1 1 1 1 1 1 1 1];
+d = [0 0 0 0 0 1 1 1];
 
 P = [x; b];
 
@@ -24,58 +37,30 @@ grid on
 
 [w, e, y] = perceptron(P, w, d, eta, iter);
 
-t = xl:0.01:xu;
-m = -w(1)/w(2);
-b = -w(3)/w(2);
-f = m*t + b;
+xLim = linspace(xl, xu, n);
+yLim = linspace(xl, xu, n);
+[X, Y] = meshgrid(xLim, yLim);
+
+m = -((w(1)*X)/w(3)) - ((w(2)*Y)/w(3));
+b = -w(4)/w(3);
+Z = m + b;
 
 for i=1:size(P, 2)
     n(i) = w' * P(:, i);
 
     if n(i) >= 0
-        plot(x(1, i), x(2, i), 'y*', 'LineWidth', 4, 'MarkerSize', 10)
+        plot3(x(1, i), x(2, i), x(3, i), 'y*', 'LineWidth', 4, 'MarkerSize', 10)
     else
-        plot(x(1, i), x(2, i), 'g*', 'LineWidth', 4, 'MarkerSize', 10)
+        plot3(x(1, i), x(2, i), x(3, i), 'g*', 'LineWidth', 4, 'MarkerSize', 10)
     end
 end
-plot(t, f, 'r-', 'LineWidth', 2)
+surf(X, Y, Z)
 
-title("and", 'FontSize', 20)
+title("A(B+C)", 'FontSize', 20)
 xlabel('A', 'FontSize', 15)
 ylabel('B', 'FontSize', 15)
+zlabel('C', 'FontSize', 15)
 
-axis([xl xu xl xu])
-axis equal
-
-figure(2) %%%% Figura 2: Compuerta or
-hold on
-grid on
-
-d = [0 1 1 1];
-w = rand(size(P, 1), 1);
-
-[w, e, y] = perceptron(P, w, d, eta, iter);
-
-t = xl:0.01:xu;
-m = -w(1)/w(2);
-b = -w(3)/w(2);
-f = m*t + b;
-
-for i=1:size(P, 2)
-    n(i) = w' * P(:, i);
-
-    if n(i) >= 0
-        plot(x(1, i), x(2, i), 'y*', 'LineWidth', 4, 'MarkerSize', 10)
-    else
-        plot(x(1, i), x(2, i), 'g*', 'LineWidth', 4, 'MarkerSize', 10)
-    end
-end
-plot(t, f, 'r-', 'LineWidth', 2)
-
-title("or", 'FontSize', 20)
-xlabel('A', 'FontSize', 15)
-ylabel('B', 'FontSize', 15)
-
-axis([xl xu xl xu])
+axis([xl xu xl xu xl xu])
 axis equal
 

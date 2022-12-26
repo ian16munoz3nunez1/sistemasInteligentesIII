@@ -1,7 +1,7 @@
 import numpy as np
 
 def Signo(v):
-    if len(v):
+    if len(v) > 1:
         y = np.zeros(len(v))
         for i in range(0, len(v)):
             if v[i] >= 0:
